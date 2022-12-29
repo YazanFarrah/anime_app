@@ -1,46 +1,52 @@
 // import 'dart:convert';
 
-// class Post {
-//   // final String name;
-//   final String description;
-//   final List<String> files;
-//   // final String category;
-//   String? id;
-//   String? userId;
+// import 'dart:ffi';
 
-//   Post({
-//     // required this.name,
-//     required this.description,
-//     required this.files,
-//     // required this.category,
-//     this.id,
-//     this.userId,
-//   });
+import 'package:anime_app/models/current_user.dart';
+import 'package:anime_app/models/user.dart';
 
-//   Map<String, dynamic> toMap() {
-//     return {
-//       // 'name': name,
-//       'id': id,
-//       'text': description,
-//       'images': files,
-//       // 'category': category,
-//       'userId': userId,
-//     };
-//   }
+class Post {
+  // final User? user;
+  final String id;
+  final User author;
+  final CurrentUser? currentUser;
+  String text;
+  final List<dynamic>? images;
+  final List<dynamic>? videos;
+  final List<dynamic>? likes;
+  final List<dynamic> comments;
+  final String date;
 
-//   factory Post.fromMap(Map<String, dynamic> map) {
-//     return Post(
-//       // name: map['name'] ?? '',
-//       description: map['text'] ?? '',
-//       files: List<String>.from(map['images']),
-//       // category: map['category'] ?? '',
-//       //we're not passing the id because mongo creates it for us
-//       // id: map['_id'],
-//       // userId: map['userId'],
-//     );
-//   }
+  Post({
+    required this.id,
+    this.currentUser,
+    required this.author,
+    required this.date,
+    required this.likes,
+    required this.comments,
+    required this.images,
+    this.videos,
+    required this.text,
+  });
 
-//   String toJson() => json.encode(toMap());
+  factory Post.fromJson(Map<String, dynamic> map) {
+    return Post(
+      // currentUser: map['posts'],
+      id: map['_id'],
+      date: map['createDate'],
+      likes: map['likes'],
+      comments: map['comments'],
+      // user: map[''],
+      author: User.fromJson(map['author']),
+      // author: map[''],
+      images: map['images'] ?? [],
+      videos: map['videos'],
+      text: map['text'],
+      // author: map['author'],
+    );
+  }
 
-//   factory Post.fromJson(String source) => Post.fromMap(json.decode(source));
-// }
+  // String toJson() => json.encode(toMap());
+
+  // factory Post.fromJson(String source) => Post.fromMap(json.decode(source));
+}

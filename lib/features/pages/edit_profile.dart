@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:anime_app/models/current_user.dart';
+import 'package:anime_app/network/remote/api_services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../utils/utils.dart';
 
@@ -14,17 +17,18 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   List<File> image = [];
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
-  final TextEditingController bioController = TextEditingController();
 
   final _EditProfileFormKey = GlobalKey<FormState>();
+  PickedFile? _imageFile;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void dispose() {
-    nameController.dispose();
+    emailController.dispose();
     usernameController.dispose();
-    bioController.dispose();
+
     super.dispose();
   }
 
@@ -32,6 +36,55 @@ class _EditProfileState extends State<EditProfile> {
     var res = await pickImage();
     setState(() {
       image = res;
+    });
+  }
+
+  void selectPhoto() async {
+    var res = await pickImage();
+    setState(() {
+      image = res;
+    });
+  }
+
+  Widget bottomSheet() {
+    return Container(
+      height: 100,
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Column(children: [
+        const Text('Choose profile photo'),
+        const SizedBox(
+          height: 20,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton.icon(
+              label: const Text('Camera'),
+              icon: const Icon(Icons.camera),
+              onPressed: () {
+                takePhoto(ImageSource.camera);
+                Navigator.pop(context);
+              },
+            ),
+            TextButton.icon(
+              label: const Text('Gallery'),
+              icon: const Icon(Icons.image),
+              onPressed: () {
+                takePhoto(ImageSource.gallery);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        )
+      ]),
+    );
+  }
+
+  void takePhoto(ImageSource source) async {
+    final pickedFile = await _picker.getImage(source: source);
+    setState(() {
+      _imageFile = pickedFile;
     });
   }
 
@@ -50,7 +103,9 @@ class _EditProfileState extends State<EditProfile> {
           ),
           actions: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  CurrentUser.profileImage = _imageFile!.path;
+                },
                 icon: const Icon(
                   Icons.check,
                   size: 30,
@@ -85,10 +140,15 @@ class _EditProfileState extends State<EditProfile> {
                     Column(
                       children: [
                         InkWell(
-                          onTap: () => print('change photo'),
-                          child: const CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                'https://t3.ftcdn.net/jpg/01/67/26/42/240_F_167264239_MJTYeDoQEItDJqlhVV13VVdQ94ViScwe.jpg'),
+                          onTap: () => showModalBottomSheet(
+                              context: context,
+                              builder: (builder) => bottomSheet()),
+                          child: CircleAvatar(
+                            backgroundImage: _imageFile == null
+                                ? const NetworkImage(
+                                        'https://i.pinimg.com/236x/81/70/21/81702128c4248529f9dc6e7506432004.jpg')
+                                    as ImageProvider
+                                : FileImage(File(_imageFile!.path)),
                             radius: 50,
                             backgroundColor: Colors.grey,
                           ),
@@ -99,25 +159,12 @@ class _EditProfileState extends State<EditProfile> {
                         const Text(
                           'Change profile photo',
                           style: TextStyle(fontSize: 16),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        InkWell(
-                          onTap: () => print('change video'),
-                          child: const CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                'https://vectorified.com/images/film-icon-6.png'),
-                            backgroundColor: Colors.grey,
-                            radius: 50,
-                          ),
                         ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01,
-                        ),
-                        const Text('Change video',
-                            style: TextStyle(fontSize: 16)),
+                        IconButton(
+                            onPressed: () => ApiServices.patchAnimefan(
+                                  context: context,
+                                ),
+                            icon: const Icon(Icons.health_and_safety))
                       ],
                     ),
                   ],
@@ -128,7 +175,7 @@ class _EditProfileState extends State<EditProfile> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.05,
                 ),
-                textField(controller: nameController, hintText: 'Name'),
+                textField(controller: emailController, hintText: 'Email'),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.05,
                 ),
@@ -136,7 +183,6 @@ class _EditProfileState extends State<EditProfile> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.05,
                 ),
-                textField(controller: bioController, hintText: 'bio'),
               ],
             ),
           ),

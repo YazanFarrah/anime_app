@@ -1,0 +1,135 @@
+{
+    "language": "English",
+    "@language":{
+        "description": "The current Language"
+    },
+    "darkMode": "Dark Mode",
+        "@darkMode": {
+            "description": "theme mode"
+        },
+    "logOut": "Log out",
+        "@logOut": {
+            "description": "logging out"
+        },
+    "about": "About",
+        "@about": {
+            "description": "About page"
+        },
+    "addPost": "Add Post",
+        "@addPost": {
+            "description": "user adding a post"
+        },
+    "logIn": "Log in",
+        "@logIn": {
+            "description": "logging user in text"
+        },
+    "proceedToLogin": "Now proceed to login!",
+        "@proceedToLogin": {
+            "description": "proceed to login! text"
+        },
+    "signUp": "Sign up",
+        "@signUp": {
+            "description": "Sign up text"
+        },
+    
+    "newUser": "Don't have an account?",
+        "@newUser": {
+            "description": "don't have an account text"
+        },
+    "oldUser": "Already have an account?",
+        "@oldUser": {
+            "description": "old user in sign up page"
+        },
+    "signUpBtn": "Sign up",
+        "@signUpBtn": {
+            "description": "sign up text button"
+        },
+    "usernameEmailText": "Username or email",
+        "@usernameEmailText": {
+            "description": "enter email hint text"
+        },
+    "validPassword": "Password must be 8-20 letters\nat least 1 number and 1 symbol",
+        "@validPassword": {
+            "description": "enter valid password"
+        },
+    "forgotPass": "Forgot Password?",
+        "@forgotPass": {
+            "description": "user forgot password text button"
+        },
+    "enterPassword": "Enter your password",
+        "@usernameEmailText": {
+            "description": "enter password hint text"
+        },
+    "confirmPassword": "Enter your password",
+        "@confirmPassword": {
+            "description": "confirm password hint text"
+        },
+    "passdontMatch": "Passwords do not match!",
+        "@passdontMatch": {
+            "description": "passwords don't match"
+        },
+    "plsEnterPass": "Please enter your password",
+        "@plsEnterPass": {
+            "description": "enter password error text"
+        },
+    "username": "Username",
+        "@username": {
+            "description": "enter username"
+        },
+    "plsEnteremail": "Please enter email or username",
+        "@plsEnteremail": {
+            "description": "enter email error text"
+        },
+    "email": "Email",
+        "@email": {
+            "description": "enter email"
+        },
+    "validEmail": "Enter valid email",
+        "@validEmail": {
+            "description": "enter valid email"
+        },
+    "validUsername": "Enter username with at least 4 characters",
+        "@validUsername": {
+            "description": "enter valid username"
+        },
+    "birthday": "Birthday",
+        "@birthday": {
+            "description": "enter birthday"
+        },
+    "createPass": "Now create your password!",
+        "@createPass": {
+            "description": "create password"
+        },
+    "createPassScreen": "Create your password",
+        "@createPassScreen": {
+            "description": "create password screen"
+        },
+    "ageInvalid": "You must be at least 13 years old', 'Warning",
+        "@ageInvalid": {
+            "description": "user less than 13 years old"
+        },
+    "warning": "Warning",
+        "@warning": {
+            "description": "warning text"
+        },
+    "accountcreated": "Account created!",
+        "@Accountcreated": {
+            "description": "account created text"
+        },
+    "loginWithsameInfo": "Login with the same credentials!",
+        "@Accountcreated": {
+            "description": "log in with same credentials text"
+        },
+    "post": "Post",
+        "@post": {
+            "description": "post text button"
+        },
+    "editProfile": "Edit Profile",
+        "@editProfile": {
+            "description": "edit profile button"
+        },
+    "chooseDate": "Choose your date of birth",
+        "@chooseDate": {
+            "description": "user chooses date"
+        }
+}

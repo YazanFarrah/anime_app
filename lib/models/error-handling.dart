@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../core/constants/utils.dart';
+import '../core/utils.dart';
 
 void httpErrorHandle({
   required http.Response response,
@@ -21,6 +21,9 @@ void httpErrorHandle({
       print('201');
       onSuccess();
       break;
+    case 301:
+      print(response);
+      break;
     case 400:
       print('400');
       // print(response.body);
@@ -31,7 +34,7 @@ void httpErrorHandle({
       showSnackBar(context, jsonDecode(response.body)['error']);
       break;
     default:
-      print(response.statusCode);
+      print(response);
     // showSnackBar(context, response.toString());
   }
 }

@@ -1,8 +1,9 @@
-import 'package:anime_app/features/auth/screens/add-discussion.dart';
-import 'package:anime_app/features/auth/screens/add-post.dart';
-import 'package:anime_app/network/remote/auth-repository.dart';
+import 'package:anime_app/features/auth/screens/add_post.dart';
+import 'package:anime_app/features/auth/screens/home_screen.dart';
+import 'package:anime_app/features/auth/screens/search_screen.dart';
+import 'package:anime_app/features/auth/screens/upload_images.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../../theme/pallete.dart';
@@ -22,30 +23,19 @@ class NavScreen extends StatefulWidget {
 
 class _NavScreenState extends State<NavScreen> {
   final List<Widget> _screens = [
-    Scaffold(
-      appBar: AppBar(
-        title: Text('welcome!!!'),
-      ),
-      body: Container(
-        child: Text('welcome'),
-      ),
-    ),
-    Scaffold(
-      appBar: AppBar(
-        title: Text('heyy'),
-      ),
-      body: Container(
-        child: Text('hey'),
-      ),
-    ),
-    ProfileScreen(),
+    HomeScreen(),
+    SearchScreen(),
+
+    //
+    NotificationsScreen(),
+    const ProfileScreen(),
   ];
 
   final List<IconData> _icons = [
     Icons.home,
-    Icons.ondemand_video,
-    MdiIcons.accountCircleOutline,
-    MdiIcons.accountGroupOutline,
+    Icons.search,
+    FeatherIcons.bell,
+    Icons.person_2_outlined,
   ];
   int _selectedIndex = 0;
   @override
@@ -54,31 +44,15 @@ class _NavScreenState extends State<NavScreen> {
     return DefaultTabController(
       length: _icons.length,
       child: Scaffold(
-        floatingActionButton: SpeedDial(
-          spacing: 12,
-          icon: Icons.add,
-          overlayColor: Colors.black,
-          overlayOpacity: 0.5,
-          animatedIcon: AnimatedIcons.add_event,
-          children: [
-            SpeedDialChild(
-              onTap: () => Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => AddPost())),
-              // Navigator.pushReplacement(
-              //     context, MaterialPageRoute(builder: (_) => AddPost())),
-              child: const Icon(Icons.post_add),
-              label: 'Add Post',
-            ),
-            SpeedDialChild(
-                child: const Icon(Icons.chat),
-                label: 'Add Discussion',
-                onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const AddDiscussion()))),
-          ],
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => navPush(context, AddPost()),
+          child: const Icon(Icons.add),
         ),
+
         //indexed stack better than page view as it doesn't lag likepageview
         //as well as you remain to the last scroll place u were when user gets
         //back to the page
+
         body: IndexedStack(
           index: _selectedIndex,
           children: _screens,

@@ -22,7 +22,7 @@ class RestApiService {
   /// Note that query params MUST BE STRINGS or lists of strings.
   static Future<http.Response> get(String path,
       [Map<String, dynamic> queryParams = const {}]) async {
-    final url = Uri.https(ApiPaths.baseUrl, path, queryParams);
+    final url = Uri.https(ApiPaths.baseUrl, path);
     print('url is $url');
     return retry(
         () => http.get(url, headers: apiHeaders).timeout(Duration(seconds: 4)),
@@ -34,9 +34,11 @@ class RestApiService {
       [Object? requestBody,
       Map<String, dynamic> queryParams = const {}]) async {
     final url = Uri.https(ApiPaths.baseUrl, path, queryParams);
-    print('test');
+
     print('post url is $url');
-    log('post url payload is $requestBody');
+
+    // print('request body is ${jsonEncode(requestBody)[0]}');
+    // print('post url payload is $requestBody');
     return retry(
         () => http
             .post(url, headers: apiHeaders, body: jsonEncode(requestBody))
@@ -63,8 +65,8 @@ class RestApiService {
       [Object? requestBody,
       Map<String, dynamic> queryParams = const {}]) async {
     final url = Uri.https(ApiPaths.baseUrl, path, queryParams);
-    print(url);
-    print(requestBody);
+    // print(url);
+    // print(requestBody);
     return retry(
         () => http
             .patch(url, headers: apiHeaders, body: jsonEncode(requestBody))
@@ -77,6 +79,7 @@ class RestApiService {
       [Object? requestBody,
       Map<String, dynamic> queryParams = const {}]) async {
     final url = Uri.https(ApiPaths.baseUrl, path, queryParams);
+    print('post url is $url');
     return retry(
         () => http
             .delete(url, headers: apiHeaders, body: jsonEncode(requestBody))

@@ -1,20 +1,24 @@
 import 'package:anime_app/utils/api-paths.dart';
 import 'package:anime_app/utils/rest-api-service.dart';
+import 'package:anime_app/widgets/loader.dart';
 import 'package:anime_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-import '../../core/constants/constants.dart';
-import '../../core/constants/utils.dart';
 import 'package:anime_app/models/models.dart';
 
+import '../../core/utils.dart';
 import '../../features/auth/screens/screens.dart';
+import '../../widgets/motion_toast.dart';
 import '../local/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class AuthRepository {
   static String? token;
+  static String id = '';
   void signUpUser({
     required BuildContext context,
     required String email,
@@ -26,7 +30,7 @@ class AuthRepository {
     // required String username,
   }) async {
     try {
-      print('object');
+      print('in sign up');
       // User user = User(
       //   id: '',
       //   name: 'name',
@@ -36,7 +40,8 @@ class AuthRepository {
       //   token: '',
       //   // cart: [],
       // );
-
+      // final String formattedDate =
+      //     DateFormat.yMd().format(DateTime(1999, 8, 25));
       final data = {
         'email': email,
         'password': password,
@@ -44,22 +49,30 @@ class AuthRepository {
         'username': username,
         'birthday': birthday,
       };
-      print('a');
+
       var res = await RestApiService.post(
         ApiPaths.signUp,
         data,
       );
-
-      print(res);
-      print('b');
+      print(res.statusCode);
+      print(data);
+      print(res.body);
 
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(
+          // CacheHelper.setString(key: 'userId', value: res.body);
+          // print(res.body);
+          displaySuccessMotionToast(
             context,
-            'Account created! Login with the same credentials!',
+            AppLocalizations.of(context)!.accountcreated,
+            AppLocalizations.of(context)!.loginWithsameInfo,
+          );
+          Future.delayed(const Duration(seconds: 2)).then(
+            (value) {
+              navPushReplacement(context, MyLogin());
+            },
           );
         },
       );
@@ -76,15 +89,17 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-      final data = {
+      var data = {
         'email': email,
         'password': password,
       };
-      print('i');
+      // print('i');
       var res = await RestApiService.post(
         ApiPaths.logIn,
         data,
       );
+      print(res.body);
+      print(res.statusCode);
 
       httpErrorHandle(
           response: res,
@@ -92,9 +107,9 @@ class AuthRepository {
           onSuccess: () {
             CacheHelper.setString(
                 key: 'token', value: jsonDecode(res.body)['token']);
-            // print(jsonDecode(res.body)['token']);
-            Navigator.push(
-                context, MaterialPageRoute(builder: (_) => const NavScreen()));
+            print(jsonDecode(res.body));
+            // print(res.body);
+            navPushReplacement(context, const NavScreen());
           }
 
           // () async {
@@ -116,6 +131,7 @@ class AuthRepository {
   static void signOut(BuildContext context) async {
     try {
       await CacheHelper.clearString(key: 'token');
+      print('clearedToken');
       navPushReplacement(context, MyLogin());
     } catch (e) {
       print(e.toString());
@@ -123,41 +139,41 @@ class AuthRepository {
   }
 
   // get user data
-  void getUserData(
-    BuildContext context,
-  ) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('x-auth-token');
+  // void getUserData(
+  //   BuildContext context,
+  // ) async {
+  //   try {
+  //     SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     String? token = prefs.getString('x-auth-token');
 
-      if (token == null) {
-        prefs.setString('x-auth-token', '');
-      }
+  //     if (token == null) {
+  //       prefs.setString('x-auth-token', '');
+  //     }
 
-      var tokenRes = await http.post(
-        Uri.parse('$uri/tokenIsValid'),
-        // headers: <String, String>{
-        //   'Content-Type': 'application/json; charset=UTF-8',
-        //   'x-auth-token': token!
-        // },
-      );
+  //     var tokenRes = await http.post(
+  //       Uri.parse('$uri/tokenIsValid'),
+  //       // headers: <String, String>{
+  //       //   'Content-Type': 'application/json; charset=UTF-8',
+  //       //   'x-auth-token': token!
+  //       // },
+  //     );
 
-      var response = jsonDecode(tokenRes.body);
+  //     var response = jsonDecode(tokenRes.body);
 
-      if (response == true) {
-        http.Response userRes = await http.get(
-          Uri.parse('$uri/'),
-          // headers: <String, String>{
-          //   'Content-Type': 'application/json; charset=UTF-8',
-          //   'x-auth-token': token
-          // },
-        );
+  //     if (response == true) {
+  //       http.Response userRes = await http.get(
+  //         Uri.parse('$uri/'),
+  //         // headers: <String, String>{
+  //         //   'Content-Type': 'application/json; charset=UTF-8',
+  //         //   'x-auth-token': token
+  //         // },
+  //       );
 
-        // var userProvider = Provider.of<UserProvider>(context, listen: false);
-        // userProvider.setUser(userRes.body);
-      }
-    } catch (e) {
-      showSnackBar(context, e.toString());
-    }
-  }
+  //       // var userProvider = Provider.of<UserProvider>(context, listen: false);
+  //       // userProvider.setUser(userRes.body);
+  //     }
+  //   } catch (e) {
+  //     showSnackBar(context, e.toString());
+  //   }
+  // }
 }
